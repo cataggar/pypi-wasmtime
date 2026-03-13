@@ -12,7 +12,7 @@ requires-python = ">=3.9"
 
 [project.urls]
 Homepage = "https://github.com/bytecodealliance/wasmtime"
-Repository = "https://github.com/cataggar/pypy-wasmtime"
+Repository = "https://github.com/cataggar/pypi-wasmtime"
 
 [project.scripts]
 wasmtime = "wasmtime_cli:main"
