@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "wasmtime-cli"
+dynamic = ["version"]
+description = "Wasmtime CLI repackaged as Python wheels"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+
+[project.urls]
+Homepage = "https://github.com/bytecodealliance/wasmtime"
+Repository = "https://github.com/cataggar/wasmtime-bin"
+
+[project.scripts]
+wasmtime = "wasmtime_cli:main"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.targets.wheel]
+packages = ["python/wasmtime_cli"]
