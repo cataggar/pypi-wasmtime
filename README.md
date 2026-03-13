@@ -1,6 +1,6 @@
 # wasmtime-bin
 
-[Wasmtime](https://github.com/bytecodealliance/wasmtime) CLI repackaged as Python wheels for easy installation via `pip` or `uv`.
+[Wasmtime](https://github.com/bytecodealliance/wasmtime) CLI repackaged as Python wheels for easy installation via tools like `uv`.
 
 Wasmtime is a fast and secure runtime for WebAssembly.
 
@@ -8,12 +8,7 @@ Wasmtime is a fast and secure runtime for WebAssembly.
 
 ```sh
 uv tool install wasmtime-bin
-```
-
-## Usage
-
-```sh
-wasmtime run hello.wasm
+wasmtime --version
 ```
 
 ## Supported Platforms
@@ -37,6 +32,17 @@ and repackages each `.tar.xz` / `.zip` as a platform-specific Python wheel.
 
 A thin Python entry point (`console_scripts`) delegates to the native binary,
 so `wasmtime` is available on `PATH` after install.
+
+## Development
+
+python, uv, & just are needed. Here is a quick setup example on Linux:
+
+```bash
+tdnf install -y python3 python3-pip
+python3 -m pip install uv
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
+uv tool install rust-just
+```
 
 ## License
 

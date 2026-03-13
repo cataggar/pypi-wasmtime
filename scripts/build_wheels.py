@@ -8,7 +8,6 @@
 
 import hashlib
 import io
-import os
 import stat
 import sys
 import tarfile
@@ -17,7 +16,7 @@ import zipfile
 from base64 import urlsafe_b64encode
 from pathlib import Path
 
-import requests
+import requests  # type: ignore[import-untyped]
 
 IMPORT_NAME = "wasmtime_cli"
 DIST_NAME = "wasmtime_bin"
@@ -114,7 +113,7 @@ _EXEC_ATTR = (
 _FILE_ATTR = (stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH) << 16
 
 
-def build_wheel(version: str, platform_key: str, info: dict, dist_dir: Path) -> Path:
+def build_wheel(version: str, platform_key: str, info: dict[str, str], dist_dir: Path) -> Path:
     """Build a single platform wheel."""
     ext = info["ext"]
     platform_tag = info["tag"]
@@ -179,7 +178,7 @@ def build_wheel(version: str, platform_key: str, info: dict, dist_dir: Path) -> 
         )
 
         # Build RECORD
-        records = []
+        records: list[str] = []
         for arcname, file_data, _ in entries:
             digest = sha256_digest(file_data)
             records.append(f"{arcname},sha256={digest},{len(file_data)}")
@@ -213,7 +212,7 @@ def main() -> None:
 
     print(f"Building wheels for wasmtime v{version}\n")
 
-    wheels = []
+    wheels: list[Path] = []
     for platform_key, info in PLATFORMS.items():
         print(f"[{platform_key}]")
         wheel = build_wheel(version, platform_key, info, dist_dir)

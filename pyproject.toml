@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "wasmtime-bin"
 dynamic = ["version"]
-description = "Wasmtime CLI repackaged as Python wheels"
+description = "Wasmtime CLI"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.9"
