@@ -1,4 +1,4 @@
-# wasmtime-cli
+# wasmtime-bin
 
 [Wasmtime](https://github.com/bytecodealliance/wasmtime) CLI repackaged as Python wheels for easy installation via `pip` or `uv`.
 
@@ -7,7 +7,7 @@ Wasmtime is a fast and secure runtime for WebAssembly.
 ## Install
 
 ```sh
-uv tool install wasmtime-cli
+uv tool install wasmtime-bin
 ```
 
 ## Usage

@@ -8,7 +8,7 @@ from pathlib import Path
 try:
     from importlib.metadata import version
 
-    __version__ = version("wasmtime-cli")
+    __version__ = version("wasmtime-bin")
 except Exception:
     __version__ = "0.0.0"
 

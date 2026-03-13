@@ -19,7 +19,8 @@ from pathlib import Path
 
 import requests
 
-PACKAGE_NAME = "wasmtime_cli"
+IMPORT_NAME = "wasmtime_cli"
+DIST_NAME = "wasmtime_bin"
 WASMTIME_REPO = "bytecodealliance/wasmtime"
 
 PLATFORMS = {
@@ -130,9 +131,9 @@ def build_wheel(version: str, platform_key: str, info: dict, dist_dir: Path) -> 
         entries: list[tuple[str, bytes, bool]] = []
 
         # Add __init__.py
-        init_py = Path(__file__).resolve().parent.parent / "python" / PACKAGE_NAME / "__init__.py"
+        init_py = Path(__file__).resolve().parent.parent / "python" / IMPORT_NAME / "__init__.py"
         entries.append(
-            (f"{PACKAGE_NAME}/__init__.py", init_py.read_bytes(), False)
+            (f"{IMPORT_NAME}/__init__.py", init_py.read_bytes(), False)
         )
 
         # Add all files from the extracted archive
@@ -140,21 +141,27 @@ def build_wheel(version: str, platform_key: str, info: dict, dist_dir: Path) -> 
             if not fpath.is_file():
                 continue
             rel = fpath.relative_to(source_dir).as_posix()
-            arcname = f"{PACKAGE_NAME}/{rel}"
+            arcname = f"{IMPORT_NAME}/{rel}"
             executable = _is_executable(fpath, binary_name)
             entries.append((arcname, fpath.read_bytes(), executable))
 
         # dist-info directory
-        dist_info_dir = f"{PACKAGE_NAME}-{version}.dist-info"
+        dist_info_dir = f"{DIST_NAME}-{version}.dist-info"
+
+        readme_path = Path(__file__).resolve().parent.parent / "README.md"
+        readme_text = readme_path.read_text(encoding="utf-8")
 
         metadata = (
             f"Metadata-Version: 2.4\n"
-            f"Name: wasmtime-cli\n"
+            f"Name: wasmtime-bin\n"
             f"Version: {version}\n"
             f"Summary: Wasmtime CLI repackaged as Python wheels\n"
             f"Home-page: https://github.com/bytecodealliance/wasmtime\n"
             f"License: Apache-2.0 WITH LLVM-exception\n"
             f"Requires-Python: >=3.9\n"
+            f"Description-Content-Type: text/markdown\n"
+            f"\n"
+            f"{readme_text}"
         )
         entries.append((f"{dist_info_dir}/METADATA", metadata.encode(), False))
 
@@ -166,7 +173,7 @@ def build_wheel(version: str, platform_key: str, info: dict, dist_dir: Path) -> 
         )
         entries.append((f"{dist_info_dir}/WHEEL", wheel_meta.encode(), False))
 
-        entry_points = "[console_scripts]\nwasmtime = wasmtime_cli:main\n"
+        entry_points = f"[console_scripts]\nwasmtime = {IMPORT_NAME}:main\n"
         entries.append(
             (f"{dist_info_dir}/entry_points.txt", entry_points.encode(), False)
         )
@@ -181,7 +188,7 @@ def build_wheel(version: str, platform_key: str, info: dict, dist_dir: Path) -> 
         entries.append((f"{dist_info_dir}/RECORD", record_data, False))
 
         # Write wheel zip
-        wheel_name = f"{PACKAGE_NAME}-{version}-py3-none-{platform_tag}.whl"
+        wheel_name = f"{DIST_NAME}-{version}-py3-none-{platform_tag}.whl"
         wheel_path = dist_dir / wheel_name
         with zipfile.ZipFile(wheel_path, "w", zipfile.ZIP_DEFLATED) as whl:
             for arcname, file_data, executable in entries:
