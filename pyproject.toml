@@ -14,9 +14,6 @@ requires-python = ">=3.9"
 Homepage = "https://github.com/bytecodealliance/wasmtime"
 Repository = "https://github.com/cataggar/pypi-wasmtime"
 
-[project.scripts]
-wasmtime = "wasmtime_cli:main"
-
 [tool.hatch.version]
 source = "vcs"
 

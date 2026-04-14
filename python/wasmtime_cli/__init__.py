@@ -1,36 +1,49 @@
-"""Wasmtime CLI - a fast and secure runtime for WebAssembly."""
+"""wasmtime-bin — Wasmtime CLI, a fast and secure runtime for WebAssembly.
+
+Provides a helper to locate the wasmtime binary installed via
+the data/scripts/ wheel layout. The binary is placed directly
+in the scripts directory by pip and does not require Python at runtime.
+"""
+
+from __future__ import annotations
 
 import os
-import subprocess
 import sys
-from pathlib import Path
-
-try:
-    from importlib.metadata import version
-
-    __version__ = version("wasmtime-bin")
-except Exception:
-    __version__ = "0.0.0"
-
-_BIN = "wasmtime.exe" if sys.platform == "win32" else "wasmtime"
+import sysconfig
 
 
-def _binary_path() -> Path:
-    """Return the path to the wasmtime binary."""
-    return Path(__file__).parent / _BIN
+def find_wasmtime_bin() -> str:
+    """Return the path to the wasmtime binary.
 
+    Searches the scripts directories where pip installs data/scripts/ files.
+    """
+    ext = ".exe" if sys.platform == "win32" else ""
+    exe = f"wasmtime{ext}"
 
-def main() -> None:
-    """Entry point that delegates to the native binary."""
-    binary = _binary_path()
-    if not binary.exists():
-        print(
-            f"wasmtime binary not found at {binary}",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-    args = [str(binary), *sys.argv[1:]]
-    if sys.platform != "win32":
-        os.execv(args[0], args)
+    targets = [
+        sysconfig.get_path("scripts"),
+        sysconfig.get_path("scripts", vars={"base": sys.base_prefix}),
+    ]
+
+    # User scheme
+    if sys.version_info >= (3, 10):
+        user_scheme = sysconfig.get_preferred_scheme("user")
+    elif os.name == "nt":
+        user_scheme = "nt_user"
     else:
-        raise SystemExit(subprocess.call(args))
+        user_scheme = "posix_user"
+    targets.append(sysconfig.get_path("scripts", scheme=user_scheme))
+
+    seen: list[str] = []
+    for target in targets:
+        if not target or target in seen:
+            continue
+        seen.append(target)
+        path = os.path.join(target, exe)
+        if os.path.isfile(path):
+            return path
+
+    locations = "\n".join(f" - {t}" for t in seen)
+    raise FileNotFoundError(
+        f"Could not find {exe} in:\n{locations}\n"
+    )
