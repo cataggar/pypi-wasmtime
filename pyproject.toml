@@ -5,10 +5,13 @@ build-backend = "hatchling.build"
 [project]
 name = "wasmtime-bin"
 dynamic = ["version"]
-description = "Wasmtime CLI"
+description = "DEPRECATED: Use 'ghr install bytecodealliance/wasmtime' instead (https://cataggar.github.io/ghr/)"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 7 - Inactive",
+]
 
 [project.urls]
 Homepage = "https://github.com/bytecodealliance/wasmtime"

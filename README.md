@@ -1,13 +1,22 @@
-# wasmtime-bin
+# wasmtime-bin (Deprecated)
+
+> **⚠️ Deprecated:** This package is deprecated and no longer updated.
+> Please use [ghr](https://cataggar.github.io/ghr/) to install `wasmtime` directly from GitHub releases instead:
+>
+> ```sh
+> ghr install bytecodealliance/wasmtime
+> ```
 
 [Wasmtime](https://github.com/bytecodealliance/wasmtime) CLI repackaged as Python wheels for easy installation via tools like `uv`.
 
 Wasmtime is a fast and secure runtime for WebAssembly.
 
-## Install
+## Install (Deprecated — use [ghr](https://cataggar.github.io/ghr/) instead)
+
+Instead of installing this package from PyPI, install [ghr](https://cataggar.github.io/ghr/) and run:
 
 ```sh
-uv tool install wasmtime-bin
+ghr install bytecodealliance/wasmtime
 wasmtime --version
 ```
 

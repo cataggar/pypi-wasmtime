@@ -73,8 +73,9 @@ def sha256_digest(data: bytes) -> str:
 
 def download_asset(version: str, platform_key: str, ext: str) -> bytes:
     """Download a wasmtime release asset."""
-    asset_name = f"wasmtime-v{version}-{platform_key}{ext}"
-    url = f"https://github.com/{WASMTIME_REPO}/releases/download/v{version}/{asset_name}"
+    upstream_version = version.split(".post")[0]
+    asset_name = f"wasmtime-v{upstream_version}-{platform_key}{ext}"
+    url = f"https://github.com/{WASMTIME_REPO}/releases/download/v{upstream_version}/{asset_name}"
     print(f"  Downloading {asset_name} ...")
     resp = requests.get(url, allow_redirects=True, timeout=300)
     resp.raise_for_status()
@@ -154,9 +155,10 @@ def build_wheel(version: str, platform_key: str, info: dict[str, str], dist_dir:
             f"Metadata-Version: 2.4\n"
             f"Name: wasmtime-bin\n"
             f"Version: {version}\n"
-            f"Summary: Wasmtime CLI repackaged as Python wheels\n"
-            f"Home-page: https://github.com/bytecodealliance/wasmtime\n"
+            f"Summary: DEPRECATED: Use 'ghr install bytecodealliance/wasmtime' instead (https://cataggar.github.io/ghr/)\n"
+            f"Home-page: https://cataggar.github.io/ghr/\n"
             f"License: Apache-2.0 WITH LLVM-exception\n"
+            f"Classifier: Development Status :: 7 - Inactive\n"
             f"Requires-Python: >=3.9\n"
             f"Description-Content-Type: text/markdown\n"
             f"\n"
